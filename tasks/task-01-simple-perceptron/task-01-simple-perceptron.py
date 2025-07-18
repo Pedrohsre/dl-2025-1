@@ -40,6 +40,7 @@ class Perceptron:
         for _ in range(self.epochs):
             for i in range (X.shape[0]):
                 y_pred = self.activation(np.dot(X_with_bias[i],self.weights))
+                
                 if y_pred != y[i]:
                     self.weights += self.learning_rate * (y[i] - y_pred) * X_with_bias[i]
         ### END CODE HERE ###
