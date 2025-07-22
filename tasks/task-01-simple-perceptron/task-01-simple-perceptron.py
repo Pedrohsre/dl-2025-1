@@ -4,7 +4,7 @@ from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 
 class Perceptron:
-    def __init__(self, seed=0, input_size=2, learning_rate=0.01, epochs=100):
+    def __init__(self, seed=0, input_size=2, learning_rate=0.1, epochs=500):
         self.seed = seed
         self.learning_rate = learning_rate
         self.epochs = epochs
@@ -15,7 +15,7 @@ class Perceptron:
         rng = np.random.default_rng(self.seed)
         ### START CODE HERE ###
         ### TODO: Initialize weights with small Gaussian noise using rng.normal
-        self.weights = rng.normal(loc=0.0, scale=0.01, size=self.input_size+1)
+        self.weights = rng.normal(size=self.input_size+1)
         ### END CODE HERE ###
 
     def activation(self, x):
@@ -27,7 +27,7 @@ class Perceptron:
     def predict(self, X):
         ### START CODE HERE ###
         ### TODO: Add a bias term to X, compute dot product with weights, and apply activation
-        X_bias = np.c_[X, np.ones(X.shape[0])]
+        X_bias = np.c_[np.ones(X.shape[0]), X]
         linear_output = np.dot(X_bias, self.weights)
         return self.activation(linear_output)
         ### END CODE HERE ###
@@ -35,7 +35,7 @@ class Perceptron:
     def fit(self, X, y):
         ### START CODE HERE ###
         ### TODO: Implement the perceptron learning rule using weight updates
-        X_with_bias = np.c_[X,np.ones(X.shape[0])]
+        X_with_bias = np.c_[np.ones(X.shape[0]), X]
 
         for _ in range(self.epochs):
             for i in range (X.shape[0]):
