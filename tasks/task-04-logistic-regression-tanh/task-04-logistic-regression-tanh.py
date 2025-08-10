@@ -12,45 +12,44 @@ class LogisticNeuron:
 
     def tanh(self, z):
         ### START CODE HERE ###
-        ### TODO: implement the tanh activation
-        a = None
+        a = np.tanh(z)
         ### END CODE HERE ###
         return a
 
     def predict_proba(self, X):
         ### START CODE HERE ###
-        ### TODO: compute activation output using tanh
-        z = None
-        a = None
+        z = np.dot(X, self.weights) + self.bias
+        a = self.tanh(z)
         ### END CODE HERE ###
         return a
 
     def predict(self, X):
-        prediction = None
+        prediction = (self.predict_proba(X) >= 0).astype(int)
         return prediction
 
     def train(self, X, y):
         ### START CODE HERE ###
-        ### TODO: convert y from {0, 1} to {-1, +1}
-        y_tanh = y
+        y_tanh = 2 * y - 1
 
         for _ in range(self.epochs):
             # Forward pass
-            y_pred = None
+            y_pred = self.predict_proba(X)
 
             # Compute error
-            error = None
+            error = y_pred - y_tanh
 
-            # Gradients
-            grad_w = None
-            grad_b = None
+            # Gradients (using derivative of tanh: 1 - tanh^2(z))
+            m = X.shape[0]  # number of training examples
+            tanh_derivative = 1 - y_pred**2  # derivative of tanh
+            grad_w = (1/m) * np.dot(X.T, error * tanh_derivative)
+            grad_b = (1/m) * np.sum(error * tanh_derivative)
 
             # Update parameters
-            self.weights = None
-            self.bias = None
+            self.weights = self.weights - self.learning_rate * grad_w
+            self.bias = self.bias - self.learning_rate * grad_b
 
             # Compute MSE loss
-            loss = None
+            loss = (1/m) * np.sum((y_pred - y_tanh)**2)
             self.loss_history.append(loss)
         ### END CODE HERE ###
 
