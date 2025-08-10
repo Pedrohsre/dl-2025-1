@@ -32,23 +32,18 @@ class LogisticNeuron:
         y_tanh = 2 * y - 1
 
         for _ in range(self.epochs):
-            # Forward pass
-            y_pred = self.predict_proba(X)
 
-            # Compute error
+            y_pred = self.predict_proba(X)
             error = y_pred - y_tanh
 
-            # Gradients (using derivative of tanh: 1 - tanh^2(z))
-            m = X.shape[0]  # number of training examples
-            tanh_derivative = 1 - y_pred**2  # derivative of tanh
+            m = X.shape[0]
+            tanh_derivative = 1 - y_pred**2
             grad_w = (1/m) * np.dot(X.T, error * tanh_derivative)
             grad_b = (1/m) * np.sum(error * tanh_derivative)
 
-            # Update parameters
             self.weights = self.weights - self.learning_rate * grad_w
             self.bias = self.bias - self.learning_rate * grad_b
 
-            # Compute MSE loss
             loss = (1/m) * np.sum((y_pred - y_tanh)**2)
             self.loss_history.append(loss)
         ### END CODE HERE ###
