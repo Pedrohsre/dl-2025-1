@@ -13,41 +13,42 @@ class LogisticNeuron:
     def sigmoid(self, z):
 
         ### START CODE HERE ###
-        ### TODO
-        s = None
+        s = 1 / (1 + np.exp(-z))
         ### END CODE HERE ###
         return s
     
     def predict_proba(self, X):
         ### START CODE HERE ###
-        ### TODO
-        a = None
+        z = np.dot(X, self.weights) + self.bias
+        a = self.sigmoid(z)
         ### END CODE HERE ###
         return a
     
     def predict(self, X):
-        prediction = None
+        prediction = (self.predict_proba(X) >= 0.5).astype(int)
         return prediction
     
     def train(self, X, y):
         for _ in range(self.epochs):
             ### START CODE HERE ###
             ### TODO: Implement forward pass
-            y_pred = None
+            y_pred = self.predict_proba(X)
 
             ### TODO: Compute error
-            error = None
+            error = y_pred - y
 
             ### TODO: Compute gradients
-            grad_w = None
-            grad_b = None
+            m = X.shape[0]
+            grad_w = (1/m) * np.dot(X.T, error)
+            grad_b = (1/m) * np.sum(error)
 
             ### TODO: Update weights and bias
-            self.weights = None
-            self.bias = None
+            self.weights = self.weights - self.learning_rate * grad_w
+            self.bias = self.bias - self.learning_rate * grad_b
 
             ### TODO: Compute loss and append to loss_history
-            loss = None
+            epsilon = 1e-8 
+            loss = -(1/m) * np.sum(y * np.log(y_pred + epsilon) + (1 - y) * np.log(1 - y_pred + epsilon))
             self.loss_history.append(loss)
             ### END CODE HERE ###
 
