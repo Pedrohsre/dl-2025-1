@@ -18,7 +18,12 @@ class LogisticNeuron:
 
     def predict_proba(self, X):
         ### START CODE HERE ###
-        z = np.dot(X, self.weights) + self.bias
+        if hasattr(self, 'X_mean') and hasattr(self, 'X_std'):
+            X_norm = (X - self.X_mean) / self.X_std
+        else:
+            X_norm = X
+            
+        z = np.dot(X_norm, self.weights) + self.bias
         a = self.tanh(z)
         ### END CODE HERE ###
         return a
